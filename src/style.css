@@ -3,7 +3,7 @@
   height: 200px;
   border: 1px solid black;
   margin: auto;
-  background-color: lightskyblue;
+  background: linear-gradient(to right, #f48fb1, #ff5722);
   overflow: hidden;
 }
 

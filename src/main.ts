@@ -1,39 +1,41 @@
-//purposely bad code so students can fix it - can make it worse
-
 import "./style.css";
 
+// Grabs HTML elements of index.html
 const dino: HTMLElement | null = document.getElementById("dino");
 const cactus: HTMLElement | null = document.getElementById("cactus");
 const bird: HTMLElement | null = document.getElementById("bird");
-
 const scoreText: HTMLElement | null = document.getElementById("scoreText");
-let score: number = 0;
-SetText("click to start!");
 
-var isJumping: boolean = false;
+// Score Handeling
+let score: number = 0;
+const scoreRate: number = 0.5;
+
+// Game Logic
+let isJumping: boolean = false;
 let gameOver: boolean = true;
 
+// Collision Detecting Numbers
 const dinoGroundHeight: number = 150;
 const dinoSkyHeight: number = 55;
 const cactusCollideDist: number = 7;
 const birdCollideDist: number = 11;
 
+// Initializes Game
+setText("click to start!");
 document.addEventListener("click", () => handleClickInput());
 
-setInterval(function () {
-  main();
-}, 10);
-
-function main() {
+function mainLoop() {
   if (gameOver == false) {
-    score = score + 1;
-    SetText(`Score: ${score}`);
-
+    score += scoreRate;
+    setText(`Score: ${score.toFixed(0)}`);
     checkGameOver();
   }
+  window.requestAnimationFrame(mainLoop);
 }
+
 function handleClickInput() {
   if (gameOver) {
+    window.requestAnimationFrame(mainLoop);
     startGame();
   } else {
     jump();
@@ -41,7 +43,6 @@ function handleClickInput() {
 }
 
 function startGame() {
-  console.log("Game started!");
   gameOver = false;
   score = 0;
   cactus?.classList.add("cactusMove");
@@ -68,7 +69,7 @@ function removeObstacles() {
 
 function endGame() {
   console.log("Player Died!");
-  SetText(`Final Score: ${score}!   Click To Play Again!`);
+  setText(`Final Score: ${score.toFixed(0)}!   Click To Play Again!`);
   gameOver = true;
   removeJump();
   removeObstacles();
@@ -106,8 +107,6 @@ function checkGameOver() {
   }
 }
 
-function SetText(s: string) {
-  if (scoreText) {
-    scoreText.textContent = s;
-  }
+function setText(s: string) {
+  scoreText!.textContent = s;
 }
