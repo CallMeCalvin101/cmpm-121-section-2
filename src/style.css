@@ -72,6 +72,32 @@
   }
 }
 
+#cactor {
+  width: 75px;
+  height: 75px;
+
+  background-image: url(/assets/cactus.png);
+  background-size: 75px 75px;
+
+  position: relative;
+  top: 100px;
+  left: 660px;
+}
+
+.cactorMove {
+  animation: cactorMoveAnimation 2.5s linear infinite;
+}
+
+@keyframes cactorMoveAnimation {
+  0% {
+    left: 1000px;
+  }
+
+  100% {
+    left: -75px;
+  }
+}
+
 #bird {
   width: 50px;
   height: 50px;

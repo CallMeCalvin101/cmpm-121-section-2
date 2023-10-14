@@ -3,6 +3,7 @@ import "./style.css";
 // Grabs HTML elements of index.html
 const dino: HTMLElement | null = document.getElementById("dino");
 const cactus: HTMLElement | null = document.getElementById("cactus");
+const cactor: HTMLElement | null = document.getElementById("cactor");
 const bird: HTMLElement | null = document.getElementById("bird");
 const scoreText: HTMLElement | null = document.getElementById("scoreText");
 
@@ -22,7 +23,7 @@ const birdCollideDist: number = 11;
 
 // Initializes Game
 setText("click to start!");
-document.addEventListener("click", () => handleClickInput());
+document.addEventListener("mousedown", () => handleClickInput());
 
 function mainLoop() {
   if (gameOver == false) {
@@ -38,7 +39,7 @@ function handleClickInput() {
     window.requestAnimationFrame(mainLoop);
     startGame();
   } else {
-    jump();
+    addJump();
   }
 }
 
@@ -46,10 +47,11 @@ function startGame() {
   gameOver = false;
   score = 0;
   cactus?.classList.add("cactusMove");
+  cactor?.classList.add("cactorMove");
   bird?.classList.add("birdMove");
 }
 
-function jump() {
+function addJump() {
   if (!isJumping) {
     isJumping = true;
     dino?.classList.add("jump");
@@ -64,44 +66,49 @@ function removeJump() {
 
 function removeObstacles() {
   cactus?.classList.remove("cactusMove");
+  cactor?.classList.remove("cactorMove");
   bird?.classList.remove("birdMove");
 }
 
 function endGame() {
-  console.log("Player Died!");
   setText(`Final Score: ${score.toFixed(0)}!   Click To Play Again!`);
   gameOver = true;
   removeJump();
   removeObstacles();
 }
 
+function calculatePosition(object: HTMLElement, area: string): number {
+  return parseInt(window.getComputedStyle(object).getPropertyValue(area));
+}
+
 function checkGameOver() {
-  if (!gameOver && dino != null && cactus != null && bird != null) {
-    //get is dinosaur jumping
-    let dinoTop = parseInt(
-      window.getComputedStyle(dino).getPropertyValue("top")
-    );
-
-    //get cactus position
-    let cactusleft = parseInt(
-      window.getComputedStyle(cactus).getPropertyValue("left")
-    );
-
-    //get bird position
-    let birdleft = parseInt(
-      window.getComputedStyle(bird).getPropertyValue("left")
-    );
-
+  if (
+    !gameOver &&
+    dino != null &&
+    cactus != null &&
+    bird != null &&
+    cactor != null
+  ) {
     //detect cactus collision
     if (
-      dinoTop >= dinoGroundHeight &&
-      Math.abs(cactusleft) < cactusCollideDist
+      calculatePosition(dino, "top") >= dinoGroundHeight &&
+      Math.abs(calculatePosition(cactus, "left")) < cactusCollideDist
+    ) {
+      endGame();
+    }
+
+    if (
+      calculatePosition(dino, "top") >= dinoGroundHeight &&
+      Math.abs(calculatePosition(cactor, "left")) < cactusCollideDist
     ) {
       endGame();
     }
 
     //detect bird collision
-    if (dinoTop <= dinoSkyHeight && Math.abs(birdleft) < birdCollideDist) {
+    if (
+      calculatePosition(dino, "top") <= dinoSkyHeight &&
+      Math.abs(calculatePosition(bird, "left")) < birdCollideDist
+    ) {
       endGame();
     }
   }
